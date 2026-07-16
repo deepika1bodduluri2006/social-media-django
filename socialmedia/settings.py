@@ -20,14 +20,16 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 SECRET_KEY = 'django-insecure-goumc5)ki_bh+j51%(y3z952xtsol$z-e#3-k%1p4)^+521_f*'
 
-DEBUG = True
+DEBUG = False
 
 ALLOWED_HOSTS = ["127.0.0.1",
     "localhost",
     ".railway.app",
     "social-media-django-production-d4fa.up.railway.app",
 ]
-
+CSRF_TRUSTED_ORIGINS = [
+    "https://social-media-django-production-d4fa.up.railway.app",
+]
 
 # Application definition
 
