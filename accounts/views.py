@@ -1,0 +1,57 @@
+from django.shortcuts import render, redirect
+from django.contrib.auth import login
+from django.contrib.auth.decorators import login_required
+
+from .forms import RegisterForm
+from posts.models import Post
+
+
+def register(request):
+
+    if request.method == "POST":
+
+        form = RegisterForm(request.POST)
+
+        if form.is_valid():
+
+            user = form.save()
+
+            login(request, user)
+
+            return redirect("profile")
+
+    else:
+
+        form = RegisterForm()
+
+    return render(
+        request,
+        "accounts/register.html",
+        {
+            "form": form
+        }
+    )
+
+
+@login_required
+def profile(request):
+
+    posts_count = Post.objects.filter(
+        user=request.user
+    ).count()
+
+    likes_received = 0
+
+    for post in Post.objects.filter(user=request.user):
+        likes_received += post.total_likes()
+
+    context = {
+        "posts_count": posts_count,
+        "likes_received": likes_received,
+    }
+
+    return render(
+        request,
+        "accounts/profile.html",
+        context
+    )

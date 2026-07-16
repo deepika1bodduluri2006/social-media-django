@@ -1,0 +1,31 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<div class="card shadow">
+
+<div class="card-header bg-dark text-white">
+
+<h2>Profile</h2>
+
+</div>
+
+<div class="card-body">
+
+<h4>Username</h4>
+
+<p>{{ user.username }}</p>
+
+<h4>Email</h4>
+
+<p>{{ user.email }}</p>
+
+<h4>Date Joined</h4>
+
+<p>{{ user.date_joined }}</p>
+
+</div>
+
+</div>
+
+{% endblock %}

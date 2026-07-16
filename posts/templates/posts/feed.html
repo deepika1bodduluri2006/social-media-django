@@ -1,0 +1,226 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<div class="container">
+
+    <div class="row justify-content-center">
+
+        <div class="col-lg-8">
+
+            <div class="d-flex justify-content-between align-items-center mb-4">
+
+                <h2 class="fw-bold">
+                    📸 Social Feed
+                </h2>
+
+                <a href="{% url 'create_post' %}" class="btn btn-success">
+                    ➕ Create Post
+                </a>
+
+            </div>
+
+            {% for post in posts %}
+
+            <div class="card shadow-lg border-0 rounded-4 mb-4">
+
+                <!-- Header -->
+                <div class="card-header bg-white border-0 d-flex justify-content-between align-items-center">
+
+                    <div class="d-flex align-items-center">
+
+                        <img
+                            src="https://ui-avatars.com/api/?name={{ post.user.username }}&background=0D8ABC&color=fff"
+                            width="50"
+                            height="50"
+                            class="rounded-circle me-3"
+                            alt="Profile">
+
+                        <div>
+
+                            <h6 class="mb-0">
+                                {{ post.user.username }}
+                            </h6>
+
+                            <small class="text-muted">
+                                {{ post.created_at|date:"d M Y, h:i A" }}
+                            </small>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+                <!-- Image -->
+                {% if post.image %}
+                <div class="text-center bg-light">
+
+                    <img
+                        src="{{ post.image.url }}"
+                        class="img-fluid rounded"
+                        alt="Post Image">
+
+                </div>
+                {% endif %}
+
+                <!-- Body -->
+                <div class="card-body">
+
+                    <p class="fs-5">
+                        {{ post.caption }}
+                    </p>
+
+                    <hr>
+
+                    <div class="d-flex align-items-center flex-wrap gap-2">
+
+                        <a href="{% url 'like_post' post.id %}"
+                           class="btn btn-outline-danger">
+
+                            {% if request.user in post.likes.all %}
+                                ❤️ Unlike
+                            {% else %}
+                                ❤️ Like
+                            {% endif %}
+
+                        </a>
+
+                        <span class="fw-bold text-danger">
+
+                            ❤️ {{ post.total_likes }} Likes
+
+                        </span>
+
+                        {% if request.user == post.user %}
+<a href="{% url 'edit_post' post.id %}"
+   class="btn btn-outline-primary">
+
+    ✏️ Edit
+
+</a>
+
+<form
+    method="POST"
+    action="{% url 'delete_post' post.id %}"
+    onsubmit="return confirm('Are you sure you want to delete this post?');">
+
+    {% csrf_token %}
+
+    <button
+        type="submit"
+        class="btn btn-outline-dark">
+
+        🗑 Delete
+
+    </button>
+
+</form>
+
+{% endif %}
+
+                    </div>
+
+                    <hr>
+
+                    <h5 class="mb-3">
+                        💬 Comments
+                    </h5>
+                    {% for comment in post.comments.all %}
+
+<div class="bg-light rounded p-2 mb-2">
+
+    <div class="d-flex justify-content-between align-items-center">
+
+        <div>
+
+            <strong>{{ comment.user.username }}</strong>
+
+            <br>
+
+            {{ comment.text }}
+
+        </div>
+
+        {% if request.user == comment.user %}
+
+        <form method="POST"
+              action="{% url 'delete_comment' comment.id %}"
+              onsubmit="return confirm('Delete this comment?');">
+
+            {% csrf_token %}
+
+            <button
+                type="submit"
+                class="btn btn-sm btn-outline-danger">
+
+                🗑 Delete
+
+            </button>
+
+        </form>
+
+        {% endif %}
+
+    </div>
+
+</div>
+
+{% empty %}           
+
+                    <p class="text-muted">
+                        No comments yet.
+                    </p>
+
+                    {% endfor %}
+
+                    <form
+                        method="POST"
+                        action="{% url 'add_comment' post.id %}">
+
+                        {% csrf_token %}
+
+                        {{ comment_form.as_p }}
+
+                        <button class="btn btn-primary">
+
+                            💬 Add Comment
+
+                        </button>
+
+                    </form>
+
+                </div>
+
+            </div>
+
+            {% empty %}
+
+            <div class="alert alert-info text-center">
+
+                <h4>
+                    📷 No Posts Yet
+                </h4>
+
+                <p>
+                    Create your first post to get started!
+                </p>
+
+                <a href="{% url 'create_post' %}"
+                   class="btn btn-success">
+
+                    ➕ Create First Post
+
+                </a>
+
+            </div>
+
+            {% endfor %}
+
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}
