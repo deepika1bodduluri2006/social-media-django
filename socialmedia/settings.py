@@ -22,7 +22,11 @@ SECRET_KEY = 'django-insecure-goumc5)ki_bh+j51%(y3z952xtsol$z-e#3-k%1p4)^+521_f*
 
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ["127.0.0.1",
+    "localhost",
+    ".railway.app",
+    "social-media-django-production-d4fa.up.railway.app",
+]
 
 
 # Application definition
